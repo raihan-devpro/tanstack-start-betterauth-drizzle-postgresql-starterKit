@@ -1,0 +1,29 @@
+{
+  "initialized": true,
+  "mode": "file-router",
+  "projectName": "",
+  "typescript": true,
+  "tailwind": true,
+  "git": true,
+  "addOnOptions": {
+    "drizzle": {
+      "database": "postgresql"
+    }
+  },
+  "packageManager": "bun",
+  "install": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "compiler",
+    "drizzle",
+    "form",
+    "oRPC",
+    "shadcn",
+    "table",
+    "better-auth",
+    "start",
+    "tanstack-query",
+    "eslint"
+  ]
+}
