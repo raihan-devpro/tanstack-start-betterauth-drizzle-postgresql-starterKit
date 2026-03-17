@@ -1,9 +1,12 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Lock, Mail, User } from 'lucide-react'
+import { FaGithub } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Checkbox } from '../ui/checkbox'
 import { InputGroupAddon } from '../ui/input-group'
+import { Button } from '../ui/button'
 import { SignupSchema } from './zod-schema'
 import type { SignupSchemaType } from './zod-schema'
 import { Card, CardContent } from '@/components/ui/card'
@@ -37,25 +40,75 @@ export default function FormSignupComponent({
     onSubmit: async (data) => {
       const { name, email, password } = data.value
 
-      toast.loading('Creating account...',{id:"signup"})
-      await authClient.signUp.email({
-        email: email,
-        password: password,
-        name: name,
-        // callbackURL: '/dashboard',
-      },{
-        onSuccess: () => {
-          toast.success('Account created successfully',{id:"signup"})
-          navigate({to:"/dashboard",replace:true})
-          form.reset()
+      toast.loading('Creating account...', { id: 'signup' })
+      await authClient.signUp.email(
+        {
+          email: email,
+          password: password,
+          name: name,
+          username: name,
+
+          // callbackURL: '/dashboard',
+        } as any,
+        {
+          onSuccess: async () => {
+            toast.loading(
+              'Account created successfully, Sending verification code...',
+              { id: 'signup' },
+            )
+            await authClient.emailOtp.sendVerificationOtp(
+              {
+                email: email, // required
+                type: 'sign-in', // required
+              },
+              {
+                onSuccess: () => {
+                  toast.success('Check your email for verification code', {
+                    id: 'signup',
+                  })
+                  navigate({
+                    to: '/verify-email',
+                    search: { email },
+                    replace: true,
+                  })
+                  form.reset()
+                },
+                onError: ({ error }) => {
+                  toast.error(error.message || 'Something went wrong', {
+                    id: 'signup',
+                  })
+                  console.log(error)
+                },
+              },
+            )
+          },
+          onError: ({ error }) => {
+            toast.error(error.message || 'Something went wrong', {
+              id: 'signup',
+            })
+            console.log(error)
+          },
         },
-        onError: ({error}) => {
-          toast.error(error.message || "Something went wrong",{id:"signup"})
-          console.log(error)
-        },
-      })
+      )
     },
   })
+
+  const handleSocialSignIn = async (provider: 'github' | 'google') => {
+    toast.loading(`Signing in with ${provider}...`, { id: 'social-signin' })
+    await authClient.signIn.social(
+      {
+        provider,
+        callbackURL: `/auth/callback?social=${provider}`,
+      },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message || 'Something went wrong', {
+            id: 'social-signin',
+          })
+        },
+      },
+    )
+  }
   return (
     <div className={cn('flex flex-col gap-6 ', className)} {...props}>
       <Card className="shadow-none border-none  ">
@@ -198,6 +251,33 @@ export default function FormSignupComponent({
                     className="w-full rounded-full"
                   />
                 </form.AppForm>
+                <div className="relative flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="flex-1 border-t" />
+                  OR CONTINUE WITH
+                  <span className="flex-1 border-t" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full rounded-full"
+                    onClick={() => handleSocialSignIn('github')}
+                  >
+                    {/* GitHub SVG icon */}
+                    <FaGithub />
+                    GitHub
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full rounded-full"
+                    onClick={() => handleSocialSignIn('google')}
+                  >
+                    {/* Google SVG icon */}
+                    <FcGoogle />
+                    Google
+                  </Button>
+                </div>
               </div>
             </div>
           </form>

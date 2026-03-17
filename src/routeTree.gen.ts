@@ -17,8 +17,10 @@ import { Route as PrivateDashboardIndexRouteImport } from './routes/_private/das
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 import { Route as ApiRestSplatRouteImport } from './routes/api.rest.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as PublicAuthVerifyEmailRouteImport } from './routes/_public/_auth/verify-email'
 import { Route as PublicAuthSignupRouteImport } from './routes/_public/_auth/signup'
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/_auth/login'
+import { Route as PublicAuthAuthCallbackRouteImport } from './routes/_public/_auth/auth.callback'
 
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/_public/',
@@ -59,6 +61,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicAuthVerifyEmailRoute = PublicAuthVerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => PublicAuthRouteRoute,
+} as any)
 const PublicAuthSignupRoute = PublicAuthSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -69,6 +76,11 @@ const PublicAuthLoginRoute = PublicAuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => PublicAuthRouteRoute,
 } as any)
+const PublicAuthAuthCallbackRoute = PublicAuthAuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => PublicAuthRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -76,10 +88,12 @@ export interface FileRoutesByFullPath {
   '/terms-conditons': typeof PublicTermsConditonsRoute
   '/login': typeof PublicAuthLoginRoute
   '/signup': typeof PublicAuthSignupRoute
+  '/verify-email': typeof PublicAuthVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rest/$': typeof ApiRestSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/dashboard/': typeof PrivateDashboardIndexRoute
+  '/auth/callback': typeof PublicAuthAuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -87,10 +101,12 @@ export interface FileRoutesByTo {
   '/terms-conditons': typeof PublicTermsConditonsRoute
   '/login': typeof PublicAuthLoginRoute
   '/signup': typeof PublicAuthSignupRoute
+  '/verify-email': typeof PublicAuthVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rest/$': typeof ApiRestSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
+  '/auth/callback': typeof PublicAuthAuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -100,10 +116,12 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_public/_auth/login': typeof PublicAuthLoginRoute
   '/_public/_auth/signup': typeof PublicAuthSignupRoute
+  '/_public/_auth/verify-email': typeof PublicAuthVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rest/$': typeof ApiRestSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
+  '/_public/_auth/auth/callback': typeof PublicAuthAuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -113,10 +131,12 @@ export interface FileRouteTypes {
     | '/terms-conditons'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/api/auth/$'
     | '/api/rest/$'
     | '/api/rpc/$'
     | '/dashboard/'
+    | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -124,10 +144,12 @@ export interface FileRouteTypes {
     | '/terms-conditons'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/api/auth/$'
     | '/api/rest/$'
     | '/api/rpc/$'
     | '/dashboard'
+    | '/auth/callback'
   id:
     | '__root__'
     | '/_public/_auth'
@@ -136,10 +158,12 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_public/_auth/login'
     | '/_public/_auth/signup'
+    | '/_public/_auth/verify-email'
     | '/api/auth/$'
     | '/api/rest/$'
     | '/api/rpc/$'
     | '/_private/dashboard/'
+    | '/_public/_auth/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/_auth/verify-email': {
+      id: '/_public/_auth/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof PublicAuthVerifyEmailRouteImport
+      parentRoute: typeof PublicAuthRouteRoute
+    }
     '/_public/_auth/signup': {
       id: '/_public/_auth/signup'
       path: '/signup'
@@ -225,17 +256,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAuthLoginRouteImport
       parentRoute: typeof PublicAuthRouteRoute
     }
+    '/_public/_auth/auth/callback': {
+      id: '/_public/_auth/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof PublicAuthAuthCallbackRouteImport
+      parentRoute: typeof PublicAuthRouteRoute
+    }
   }
 }
 
 interface PublicAuthRouteRouteChildren {
   PublicAuthLoginRoute: typeof PublicAuthLoginRoute
   PublicAuthSignupRoute: typeof PublicAuthSignupRoute
+  PublicAuthVerifyEmailRoute: typeof PublicAuthVerifyEmailRoute
+  PublicAuthAuthCallbackRoute: typeof PublicAuthAuthCallbackRoute
 }
 
 const PublicAuthRouteRouteChildren: PublicAuthRouteRouteChildren = {
   PublicAuthLoginRoute: PublicAuthLoginRoute,
   PublicAuthSignupRoute: PublicAuthSignupRoute,
+  PublicAuthVerifyEmailRoute: PublicAuthVerifyEmailRoute,
+  PublicAuthAuthCallbackRoute: PublicAuthAuthCallbackRoute,
 }
 
 const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
