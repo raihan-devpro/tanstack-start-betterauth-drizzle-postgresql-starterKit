@@ -1,4 +1,4 @@
-Welcome to your new TanStack app! 
+Welcome to your new TanStack app!
 
 # Getting Started
 
@@ -32,6 +32,23 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 
 ## Linting & Formatting
 
+### .vscode/settings.json
+{
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.eslint": "always",
+    "source.fixAll.eslint": "always",
+  }
+}
 
 This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
 
