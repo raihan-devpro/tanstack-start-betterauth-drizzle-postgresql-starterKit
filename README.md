@@ -33,6 +33,11 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 ## Linting & Formatting
 
 ### .vscode/settings.json
+
+<details>
+<summary>VS Code settings</summary>
+
+```json
 {
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
@@ -46,9 +51,11 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports.eslint": "always",
-    "source.fixAll.eslint": "always",
+    "source.fixAll.eslint": "always"
   }
 }
+```
+</details>
 
 This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
 
