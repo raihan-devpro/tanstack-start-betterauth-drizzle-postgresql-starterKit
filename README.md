@@ -34,7 +34,7 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 
 ### .vscode/settings.json
 
-<details>
+<details open>
 <summary>VS Code settings</summary>
 
 ```json
