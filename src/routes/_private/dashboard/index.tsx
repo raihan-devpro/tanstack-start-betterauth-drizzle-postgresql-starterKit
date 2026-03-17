@@ -1,12 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useAppContext } from '@/hooks/use-app-context'
+import LoggedInUserInfo from '@/components/custom/LoggedInUserInfo'
+
 
 export const Route = createFileRoute('/_private/dashboard/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { session, user } = useAppContext()
-
-  return <div>Hello "/_private/dashboard/"!</div>
+  return <LoggedInUserInfo />
 }

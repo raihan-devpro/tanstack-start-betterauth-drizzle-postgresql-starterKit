@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrivateRouteRouteImport } from './routes/_private/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicTermsConditonsRouteImport } from './routes/_public/terms-conditons'
 import { Route as PublicPrivacyPolicyRouteImport } from './routes/_public/privacy-policy'
@@ -22,6 +23,10 @@ import { Route as PublicAuthSignupRouteImport } from './routes/_public/_auth/sig
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/_auth/login'
 import { Route as PublicAuthAuthCallbackRouteImport } from './routes/_public/_auth/auth.callback'
 
+const PrivateRouteRoute = PrivateRouteRouteImport.update({
+  id: '/_private',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/_public/',
   path: '/',
@@ -42,9 +47,9 @@ const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateDashboardIndexRoute = PrivateDashboardIndexRouteImport.update({
-  id: '/_private/dashboard/',
+  id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PrivateRouteRoute,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
@@ -110,6 +115,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_private': typeof PrivateRouteRouteWithChildren
   '/_public/_auth': typeof PublicAuthRouteRouteWithChildren
   '/_public/privacy-policy': typeof PublicPrivacyPolicyRoute
   '/_public/terms-conditons': typeof PublicTermsConditonsRoute
@@ -152,6 +158,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
   id:
     | '__root__'
+    | '/_private'
     | '/_public/_auth'
     | '/_public/privacy-policy'
     | '/_public/terms-conditons'
@@ -167,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  PrivateRouteRoute: typeof PrivateRouteRouteWithChildren
   PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
   PublicPrivacyPolicyRoute: typeof PublicPrivacyPolicyRoute
   PublicTermsConditonsRoute: typeof PublicTermsConditonsRoute
@@ -174,11 +182,17 @@ export interface RootRouteChildren {
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRestSplatRoute: typeof ApiRestSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
-  PrivateDashboardIndexRoute: typeof PrivateDashboardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PrivateRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/': {
       id: '/_public/'
       path: '/'
@@ -212,7 +226,7 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof PrivateDashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PrivateRouteRoute
     }
     '/api/rpc/$': {
       id: '/api/rpc/$'
@@ -266,6 +280,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PrivateRouteRouteChildren {
+  PrivateDashboardIndexRoute: typeof PrivateDashboardIndexRoute
+}
+
+const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
+  PrivateDashboardIndexRoute: PrivateDashboardIndexRoute,
+}
+
+const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(
+  PrivateRouteRouteChildren,
+)
+
 interface PublicAuthRouteRouteChildren {
   PublicAuthLoginRoute: typeof PublicAuthLoginRoute
   PublicAuthSignupRoute: typeof PublicAuthSignupRoute
@@ -285,6 +311,7 @@ const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  PrivateRouteRoute: PrivateRouteRouteWithChildren,
   PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
   PublicPrivacyPolicyRoute: PublicPrivacyPolicyRoute,
   PublicTermsConditonsRoute: PublicTermsConditonsRoute,
@@ -292,7 +319,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRestSplatRoute: ApiRestSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
-  PrivateDashboardIndexRoute: PrivateDashboardIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
